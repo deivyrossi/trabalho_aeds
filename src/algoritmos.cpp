@@ -23,7 +23,7 @@ using namespace std;
 Posicao Algoritmos::encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y) {
     vector<Posicao> direcoes = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
     Posicao melhorPos = {x, y};
-    int melhorValor = 2;
+    int melhorValor = 3;
 
     for (const auto& direcao : direcoes) {
         int nx = x + direcao.x;
