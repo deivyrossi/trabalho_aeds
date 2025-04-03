@@ -4,6 +4,12 @@
 #include <vector>
 using namespace std;
 
+#include "config.hpp"
+
+
+
+
+
 void Arquivo::processarArquivo(const string& nomeArquivo) {
     if (nomeArquivo.empty()) {
         cerr << "Nome do arquivo não pode ser vazio";
@@ -46,4 +52,15 @@ void Arquivo::processarArquivo(const string& nomeArquivo) {
     } catch (const exception& e) {
         cerr << "Erro ao processar arquivo " << nomeArquivo << ": " << e.what() << endl;
     }
+}
+
+vector<vector<int>> Arquivo::getMatriz() const {
+    return matriz;
+}
+
+int Arquivo::getLinhas() const {
+    return linhas;
+}
+int Arquivo::getColunas() const {
+    return colunas;
 }
