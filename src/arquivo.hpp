@@ -1,20 +1,20 @@
 #ifndef ARQUIVO_HPP
 #define ARQUIVO_HPP
 
-#include <string>
+
 #include <vector>
-#include <iostream>
+#include <string>
+
 using namespace std;
 
 class Arquivo {
 public:
     vector<vector<int>> matriz;
-    int linhas;
-    int colunas;
+
     void processarArquivo(const string& nomeArquivo);
-    vector<vector<int>> getMatriz() const;
-    int getLinhas() const;
-    int getColunas() const;
+    Arquivo();
+
+    vector<vector<int>>& getMatriz();
 };
 
 #endif

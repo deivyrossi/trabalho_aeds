@@ -9,12 +9,12 @@
 #include <stdexcept>
 #include <sstream>
 
+using namespace std;
+
 struct Posicao {
     int x;
     int y;
 };
-
-
 
 
 class Algoritmos {

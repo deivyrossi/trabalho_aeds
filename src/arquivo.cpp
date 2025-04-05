@@ -2,13 +2,12 @@
 #include <iostream>
 #include <fstream>
 #include <vector>
+#include <stdexcept>
 using namespace std;
 
 #include "config.hpp"
 
-
-
-
+Arquivo::Arquivo() {}
 
 void Arquivo::processarArquivo(const string& nomeArquivo) {
     if (nomeArquivo.empty()) {
@@ -27,7 +26,7 @@ void Arquivo::processarArquivo(const string& nomeArquivo) {
             throw runtime_error("Erro ao ler dimensões da matriz e posição inicial do fogo");
         }
 
-        vector<vector<int>> matriz(linhas, vector<int>(colunas));
+        matriz.resize(linhas, vector<int>(colunas));
         for (int i = 0; i < linhas; ++i) {
             for (int j = 0; j < colunas; ++j) {
                 if (!(arqEntrada >> matriz[i][j])) {
@@ -54,13 +53,6 @@ void Arquivo::processarArquivo(const string& nomeArquivo) {
     }
 }
 
-vector<vector<int>> Arquivo::getMatriz() const {
+vector<vector<int>>& Arquivo::getMatriz(){
     return matriz;
-}
-
-int Arquivo::getLinhas() const {
-    return linhas;
-}
-int Arquivo::getColunas() const {
-    return colunas;
 }
