@@ -23,6 +23,9 @@ public:
     Posicao encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y);
     Posicao encontrarCaminho(const vector<vector<int>>& matriz, int linhas, int colunas);
     void imprimirMatriz(const vector<vector<int>>& matriz);
+    void gerarRelatorio(const string& nomeArquivo);
+    bool fogoAoRedor(int x, int y, int linhas, int colunas);
+
 };
 
 #endif

@@ -9,9 +9,7 @@ int main() {
    
     vector<vector<int>>& matriz = arq.getMatriz();
     int linhas = matriz.size();
-    cout << "linhas: " << linhas << endl;
     int colunas = matriz[0].size();
-    cout << "colunas: " << colunas << endl;
   
 
     if (matriz.empty() || matriz[0].empty()) {
@@ -21,6 +19,7 @@ int main() {
    
     Algoritmos alg;
     alg.PegarFogo(linhas,colunas, matriz);
+    alg.gerarRelatorio("input.dat");
 
     return 0;
 }
