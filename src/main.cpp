@@ -3,11 +3,8 @@
 #include "config.hpp"
 
 int main() {
-    // Limpa o arquivo de saída antes de iniciar a simulação
     ofstream limpar("output.dat");
     limpar.close();
-
-    // Lê a matriz inicial do input.dat
     Arquivo arq;
     vector<vector<int>> matriz = arq.getMatriz();
 
@@ -28,12 +25,10 @@ if (posAnimal.x == -1 || posAnimal.y == -1) {
 }
 
 
-    // Encontra a posição inicial do animal (posição segura com valor 0)
- 
-  
+    Posicao inicial = alg.encontrarCaminho(matriz, linhas, colunas);
 
-    // Executa a simulação completa
-    alg.SimularIteracoes(linhas, colunas, matriz, posAnimal);
+
+    alg.SimularIteracoes(linhas, colunas, matriz, inicial);
 
     return 0;
 }

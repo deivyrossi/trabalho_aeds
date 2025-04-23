@@ -26,6 +26,11 @@ public:
     bool fogoAoRedor(int x, int y, int linhas, int colunas);
     void SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao posAnimal);
 
+    private:
+    Posicao posAnimal;
+
 };
+
+
 
 #endif

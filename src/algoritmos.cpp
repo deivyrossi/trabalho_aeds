@@ -41,22 +41,20 @@ Posicao Algoritmos::encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, 
     return melhorPos;
 }
 
-void Algoritmos::imprimirMatriz(const vector<vector<int>>& matriz) {
-    for (const auto& linha : matriz) {
-        for (const auto& elemento : linha) {
-            int visivel;
-            
-            if(elemento == 5){
-                
-                visivel = 2;
-            }else{
-                visivel = elemento;
+void Algoritmos::imprimirMatriz(const std::vector<std::vector<int>>& matriz) {
+    for (size_t i = 0; i < matriz.size(); ++i) {
+        for (size_t j = 0; j < matriz[0].size(); ++j) {
+            if (i == static_cast<size_t>(posAnimal.x) && j == static_cast<size_t>(posAnimal.y)) { 
+                cout << "A ";
+            } else {
+                int visivel = (matriz[i][j] == 5) ? 2 : matriz[i][j];
+                cout << visivel << " ";
             }
-            cout << visivel << " ";
         }
         cout << endl;
     }
 }
+
 
 bool Algoritmos::fogoAoRedor(int x, int y, int linhas, int colunas) {
     Arquivo arq;
@@ -91,7 +89,8 @@ Posicao Algoritmos::encontrarCaminho(const vector<vector<int>>& matriz, int linh
 }
 
 
-void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao posAnimal) {
+void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao inicial) {
+    posAnimal = inicial;
     int passosAnimal = 0;
     int encontrouAgua = 0;
     int iteracoesParado = 0;
@@ -133,8 +132,10 @@ void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& 
             for (int d = 0; d < 4; d++) {
                 int nx = posAnimal.x + dx[d];
                 int ny = posAnimal.y + dy[d];
-                if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas && matriz[nx][ny] != 4) {
-                    matriz[nx][ny] = 1;
+                if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas) {
+                    if (matriz[nx][ny] != 4 && matriz[nx][ny] != 3 && matriz[nx][ny != 0]) {
+                        matriz[nx][ny] = 1;
+                    }
                 }
             }
         }
@@ -143,6 +144,7 @@ void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& 
         vector<vector<int>> novaMatriz = matriz;
         vector<Posicao> novosFocos;
 
+      
         for (auto& fogo : focosFogo) {
             int x = fogo.x;
             int y = fogo.y;
@@ -153,23 +155,32 @@ void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& 
                 for (int d = 0; d < 4; d++) {
                     int nx = x + dx[d];
                     int ny = y + dy[d];
-                    if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas && matriz[nx][ny] == 1) {
-                        novaMatriz[nx][ny] = 2;
-                        novosFocos.push_back({nx, ny});
+
+                    if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas) {
+                        if (matriz[nx][ny] == 1) { 
+                            novaMatriz[nx][ny] = 2;
+                            novosFocos.push_back({nx, ny});
+                        }
                     }
                 }
             }
+        }
 
-            
-            if (matriz[x][y] == 2) {
-                novaMatriz[x][y] = 5;
-            } else if (matriz[x][y] == 5) {
-                novaMatriz[x][y] = 3;
+     
+        for (int i = 0; i < linhas; i++) {
+            for (int j = 0; j < colunas; j++) {
+                if (matriz[i][j] == 2) {
+                    novaMatriz[i][j] = 5;
+                    novosFocos.push_back({i, j});
+                } else if (matriz[i][j] == 5) {
+                    novaMatriz[i][j] = 3;
+                }
             }
         }
 
         matriz = novaMatriz;
         focosFogo = novosFocos;
+
 
 for (int i = 0; i < linhas; i++) {
     for (int j = 0; j < colunas; j++) {
