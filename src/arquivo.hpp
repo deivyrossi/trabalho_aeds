@@ -14,7 +14,8 @@ public:
     void processarArquivo(const string& nomeArquivo);
     Arquivo();
 
-    vector<vector<int>>& getMatriz();
+    vector<vector<int>> getMatriz();
+    
 };
 
 #endif

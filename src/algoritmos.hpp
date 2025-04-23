@@ -19,12 +19,12 @@ struct Posicao {
 
 class Algoritmos {
 public:
-    void PegarFogo(int linhas, int colunas, vector<vector<int>>& matriz);
     Posicao encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y);
     Posicao encontrarCaminho(const vector<vector<int>>& matriz, int linhas, int colunas);
     void imprimirMatriz(const vector<vector<int>>& matriz);
-    void gerarRelatorio(const string& nomeArquivo);
+    void salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int iteracao);
     bool fogoAoRedor(int x, int y, int linhas, int colunas);
+    void SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao posAnimal);
 
 };
 

@@ -53,6 +53,22 @@ void Arquivo::processarArquivo(const string& nomeArquivo) {
     }
 }
 
-vector<vector<int>>& Arquivo::getMatriz(){
+vector<vector<int>> Arquivo::getMatriz() {
+    ifstream arquivo("input.dat");
+
+    int linhas, colunas, fogoX, fogoY;
+    arquivo >> linhas >> colunas >> fogoX >> fogoY;
+
+    vector<vector<int>> matriz(linhas, vector<int>(colunas));
+
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            if (!(arquivo >> matriz[i][j])) {
+                cerr << "Erro ao ler valor da matriz na posição (" << i << ", " << j << ")" << endl;
+                return {};
+            }
+        }
+    }
+
     return matriz;
 }

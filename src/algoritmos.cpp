@@ -44,7 +44,15 @@ Posicao Algoritmos::encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, 
 void Algoritmos::imprimirMatriz(const vector<vector<int>>& matriz) {
     for (const auto& linha : matriz) {
         for (const auto& elemento : linha) {
-            cout << elemento << " ";
+            int visivel;
+            
+            if(elemento == 5){
+                
+                visivel = 2;
+            }else{
+                visivel = elemento;
+            }
+            cout << visivel << " ";
         }
         cout << endl;
     }
@@ -83,123 +91,153 @@ Posicao Algoritmos::encontrarCaminho(const vector<vector<int>>& matriz, int linh
 }
 
 
-void Algoritmos::PegarFogo(int linhas, int colunas, vector<vector<int>>& matriz) {
-    vector<vector<int>> novaMatriz = matriz;
+void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao posAnimal) {
+    int passosAnimal = 0;
+    int encontrouAgua = 0;
+    int iteracoesParado = 0;
+    int maxIteracoes = MAX_ITERACOES;
+    int iteracao = 0;
+    bool animalVivo = true;
 
-    int iteracao = 0; 
-    while (true) { 
-        cout << "Iteração: " << iteracao << endl;
-        imprimirMatriz(matriz);
-        cout << endl;
+    vector<Posicao> focosFogo;
 
-        for (int i = 0; i < linhas; i++) {
-            for (int j = 0; j < colunas; j++) {
-            
-
-                if (i > 0 && matriz[i-1][j] == 1) novaMatriz[i-1][j] = 2;
-                if (i < linhas - 1 && matriz[i+1][j] == 1) novaMatriz[i+1][j] = 2;
-                if (j > 0 && matriz[i][j-1] == 1) novaMatriz[i][j-1] = 2;
-                if (j < colunas - 1 && matriz[i][j+1] == 1) novaMatriz[i][j+1] = 2;
-               
-                    
-                
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            if (matriz[i][j] == 2) {
+                focosFogo.push_back({i, j});
             }
-            
+        }
+    }
+
+    while (animalVivo && !focosFogo.empty() && iteracao < maxIteracoes) {
+        cout << "Iteração " << iteracao << endl;
+
+     
+        Posicao proxima = encontrarMelhorPos(matriz, linhas, colunas, posAnimal.x, posAnimal.y);
+
+        if (proxima.x != posAnimal.x || proxima.y != posAnimal.y) {
+            posAnimal = proxima;
+            passosAnimal++;
+            iteracoesParado = 0;
+        } else {
+            iteracoesParado++;
         }
 
+     
+        if (matriz[posAnimal.x][posAnimal.y] == 4) {
+            encontrouAgua++;
+            matriz[posAnimal.x][posAnimal.y] = 0;
+
+            int dx[] = {-1, 1, 0, 0};
+            int dy[] = {0, 0, -1, 1};
+            for (int d = 0; d < 4; d++) {
+                int nx = posAnimal.x + dx[d];
+                int ny = posAnimal.y + dy[d];
+                if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas && matriz[nx][ny] != 4) {
+                    matriz[nx][ny] = 1;
+                }
+            }
+        }
+
+      
+        vector<vector<int>> novaMatriz = matriz;
+        vector<Posicao> novosFocos;
+
+        for (auto& fogo : focosFogo) {
+            int x = fogo.x;
+            int y = fogo.y;
+            int dx[] = {-1, 1, 0, 0};
+            int dy[] = {0, 0, -1, 1};
+
+            if (matriz[x][y] == 2 || matriz[x][y] == 5) {
+                for (int d = 0; d < 4; d++) {
+                    int nx = x + dx[d];
+                    int ny = y + dy[d];
+                    if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas && matriz[nx][ny] == 1) {
+                        novaMatriz[nx][ny] = 2;
+                        novosFocos.push_back({nx, ny});
+                    }
+                }
+            }
+
+            
+            if (matriz[x][y] == 2) {
+                novaMatriz[x][y] = 5;
+            } else if (matriz[x][y] == 5) {
+                novaMatriz[x][y] = 3;
+            }
+        }
+
+        matriz = novaMatriz;
+        focosFogo = novosFocos;
+
+for (int i = 0; i < linhas; i++) {
+    for (int j = 0; j < colunas; j++) {
+        if (matriz[i][j] == 2 || matriz[i][j] == 5) {
+            focosFogo.push_back({i, j});
+        }
+    }
+}
 
         
+        if (matriz[posAnimal.x][posAnimal.y] == 2) {
+            Posicao fuga = encontrarMelhorPos(matriz, linhas, colunas, posAnimal.x, posAnimal.y);
+            if (fuga.x != posAnimal.x || fuga.y != posAnimal.y) {
+                posAnimal = fuga;
+                passosAnimal++;
+            } else {
+                cout << "Animal morreu na iteração " << iteracao << endl;
+                animalVivo = false;
+                break;
+            }
+        }
 
-        if (matriz == novaMatriz) break;
-        matriz = novaMatriz;
+        
+        imprimirMatriz(matriz);
+        salvarIteracaoNoArquivo(matriz, iteracao); 
+
         iteracao++;
     }
 
+    if (animalVivo) {
+        cout << "Animal sobreviveu!\n";
+    }
+
+    cout << "Passos: " << passosAnimal << endl;
+    cout << "Águas encontradas: " << encontrouAgua << endl;
+    cout << "Iterações parado: " << iteracoesParado << endl;
 }
 
-void Algoritmos::AnimalCaminho(int linhas, int colunas, vector<vector<int>> matriz, int xIni, int yIni){
-
-    if(passos == 0){
-        home = {xIni, yInix};
-    }
-
-    vector<vector<int>> visitado[linhas][colunas];
-    queue <int> filaX;
-    queue <int> filaY;
-
-    for(int i = 0; i < linhas; i++){
-        for(int j = 0; j < colunas; j++){
-            if(matriz[i][j] == 4){
-                fila.push({i,j});
-                visitado[i][j] = false;
-            }
-        }
-    }
-
-    filaX.push(xIni);
-    filaY.push(yIni);
-
-    visitado[xIni][yIni] = true;
-
-
-    int dx[] = {-1, -1, 0, 0};
-    int dy[] = {0, 0, -1, -1};
-
-    int nx, ny;
-    
-
-    while(!filaX.empty() && !filaY.empty()){
-        int x = filaX.front();
-        int y = filaY.front();
-
-        filaX.pop();
-        filaY.pop();
-    }
-
-    for(int i = 0; i < 4; i++){
-        nx = x + dx[i];
-        nx = y + dy[i];
-
-        if (nx < 0 || ny < 0 || nx >= linhas || ny >= colunas) {
-            continue;
-        }
-
-    }
 
 
 
 
+void Algoritmos::salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int iteracao) {
+    ofstream arquivoSaida("output.dat", ios::app);
 
-
-
-}
-
-void Algoritmos::gerarRelatorio(const string &nomeArquivoEntrada) {
-    Arquivo arq;
-    
-    string nomeArquivoSaida = "output.dat";
-    ifstream arquivoEntrada(nomeArquivoEntrada);    
-    
-    ofstream arquivoSaida(nomeArquivoSaida);
-    if (!arquivoSaida) {
-        cerr << "Erro ao criar arquivo de saída: " << nomeArquivoSaida << endl;
+    if (!arquivoSaida.is_open()) {
+        cerr << "Erro ao abrir output.dat para escrita." << endl;
         return;
     }
 
-    arquivoSaida << "Relatório de Saída:\n";
+    arquivoSaida << "Iteração " << iteracao << ":\n";
 
-    arquivoSaida << "\n\n";
-    arquivoSaida << "Matriz final:\n";
-    for (const auto &linha : arq.getMatriz()) {
+    for (const auto& linha : matriz) {
         for (int valor : linha) {
-            arquivoSaida << valor << " ";
+            int visivel;
+            
+            if(valor == 5){
+                
+                visivel = 2;
+            }else{
+                visivel = valor;
+            }
+            arquivoSaida << visivel << " ";
         }
-        arquivoSaida << endl;
+        arquivoSaida << "\n";
     }
-    arquivoSaida << "\n\n";
-    
-    arquivoSaida << "- Total de passos: " << iteracao << " passos." << endl;
+
+    arquivoSaida << "\n";
     arquivoSaida.close();
-    cout << "Relatório gerado em: " << nomeArquivoSaida << endl;
 }
 
