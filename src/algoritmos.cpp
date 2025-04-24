@@ -56,28 +56,28 @@ void Algoritmos::imprimirMatriz(const std::vector<std::vector<int>>& matriz) {
 }
 
 
-bool Algoritmos::fogoAoRedor(int x, int y, int linhas, int colunas) {
-    Arquivo arq;
-    int numLinhas = linhas;
-    int numColunas = colunas;
-    int dx[] = {-1, 1, 0, 0, -1, 1, -1, 1};
-    int dy[] = {0, 0, -1, 1, -1, -1, 1, 1};
-    
-    for (int i = 0; i < 8; i++) {
-        int nx = x + dx[i];
-        int ny = y + dy[i];
 
-        if (nx < 0 || ny < 0 || nx >= numLinhas || ny >= numColunas) {
-            continue;
+bool Algoritmos::existeSaida(const vector<vector<int>> matriz,  Posicao pos){
+    int dx[] = {-1, 1, 0, 0};
+    int dy[] = {0, 0, -1, 1};
+
+    for(int i = 0; i < 4; i++){
+        int nx = pos.x + dx[i];
+        int ny = pos.y + dy[i];
+
+        if(nx >= 0 && ny >= 0 && nx < static_cast <int> (matriz.size()) && ny < static_cast <int> (matriz[0].size())){
+            if(matriz[nx][ny] == 4 || matriz[nx][ny] == 0){
+                return true;
+            }
+
+            
         }
-
-        int tipo = arq.getMatriz()[nx][ny];
-        if (tipo == '2') {
-            return true;
-        }        
     }
+
     return false;
 }
+
+
 
 Posicao Algoritmos::encontrarCaminho(const vector<vector<int>>& matriz, int linhas, int colunas) {
     for (int i = 0; i < linhas; i++) {
@@ -148,21 +148,28 @@ void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& 
         for (auto& fogo : focosFogo) {
             int x = fogo.x;
             int y = fogo.y;
-            int dx[] = {-1, 1, 0, 0};
-            int dy[] = {0, 0, -1, 1};
+            
 
             if (matriz[x][y] == 2 || matriz[x][y] == 5) {
-                for (int d = 0; d < 4; d++) {
-                    int nx = x + dx[d];
-                    int ny = y + dy[d];
+                vector<pair<int, int>> direcoesVento;
 
-                    if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas) {
-                        if (matriz[nx][ny] == 1) { 
-                            novaMatriz[nx][ny] = 2;
-                            novosFocos.push_back({nx, ny});
-                        }
-                    }
-                }
+if (VENTO_CIMA)      direcoesVento.push_back({-1, 0});
+if (VENTO_BAIXO)     direcoesVento.push_back({1, 0});
+if (VENTO_ESQUERDA)  direcoesVento.push_back({0, -1});
+if (VENTO_DIREITA)   direcoesVento.push_back({0, 1});
+
+for (auto [dx, dy] : direcoesVento) {
+    int nx = x + dx;
+    int ny = y + dy;
+
+    if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas) {
+        if (matriz[nx][ny] == 1 && !(nx == posAnimal.x && ny == posAnimal.y)) {
+            novaMatriz[nx][ny] = 2;
+            novosFocos.push_back({nx, ny});
+        }
+    }
+}
+
             }
         }
 
@@ -196,11 +203,19 @@ for (int i = 0; i < linhas; i++) {
             if (fuga.x != posAnimal.x || fuga.y != posAnimal.y) {
                 posAnimal = fuga;
                 passosAnimal++;
-            } else {
+            }
+            else {
                 cout << "Animal morreu na iteração " << iteracao << endl;
                 animalVivo = false;
                 break;
             }
+
+            if(iteracoesParado >= 3 && !existeSaida(matriz, posAnimal)){
+                cout << "Animal morreu na iteração " << iteracao << endl;
+                animalVivo = false;
+                break;
+            }
+            
         }
 
         
@@ -251,4 +266,27 @@ void Algoritmos::salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int 
     arquivoSaida << "\n";
     arquivoSaida.close();
 }
+
+void Algoritmos::executarPrograma(){
+    Arquivo arq;
+    vector<vector<int>> matriz = arq.getMatriz();
+
+    if (matriz.empty()) {
+        cerr << "Erro: matriz vazia!" << endl;
+        return;
+    }
+
+    int linhas = matriz.size();
+    int colunas = matriz[0].size();
+
+    Posicao inicial = encontrarCaminho(matriz, linhas, colunas);
+
+    if (inicial.x == -1 || inicial.y == -1) {
+        cerr << "Erro: posição inicial do animal não encontrada!" << endl;
+        return;
+    }
+
+    SimularIteracoes(linhas, colunas, matriz, inicial);
+}
+
 

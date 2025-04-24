@@ -23,8 +23,10 @@ public:
     Posicao encontrarCaminho(const vector<vector<int>>& matriz, int linhas, int colunas);
     void imprimirMatriz(const vector<vector<int>>& matriz);
     void salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int iteracao);
-    bool fogoAoRedor(int x, int y, int linhas, int colunas);
+    bool existeSaida(const vector<vector<int>> matriz, Posicao pos);
     void SimularIteracoes(int linhas, int colunas, vector<vector<int>>& matriz, Posicao posAnimal);
+    void executarPrograma();
+    
 
     private:
     Posicao posAnimal;

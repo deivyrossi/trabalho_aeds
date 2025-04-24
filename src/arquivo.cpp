@@ -52,12 +52,19 @@ void Arquivo::processarArquivo(const string& nomeArquivo) {
         cerr << "Erro ao processar arquivo " << nomeArquivo << ": " << e.what() << endl;
     }
 }
-
 vector<vector<int>> Arquivo::getMatriz() {
     ifstream arquivo("input.dat");
 
-    int linhas, colunas, fogoX, fogoY;
-    arquivo >> linhas >> colunas >> fogoX >> fogoY;
+    if (!arquivo.is_open()) {
+        cerr << "Erro ao abrir input.dat" << endl;
+        return {};
+    }
+
+    int linhas, colunas;
+    arquivo >> linhas >> colunas;
+
+    int fogoX, fogoY;
+    arquivo >> fogoX >> fogoY;
 
     vector<vector<int>> matriz(linhas, vector<int>(colunas));
 
@@ -72,3 +79,4 @@ vector<vector<int>> Arquivo::getMatriz() {
 
     return matriz;
 }
+

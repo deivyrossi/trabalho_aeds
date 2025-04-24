@@ -2,8 +2,8 @@
 #define CONFIG_H
 
 #define VENTO_CIMA 1
-#define VENTO_BAIXO 0
-#define VENTO_ESQUERDA 0
+#define VENTO_BAIXO 1
+#define VENTO_ESQUERDA 1
 #define VENTO_DIREITA 1
 
 #define MAX_ITERACOES 100
