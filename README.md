@@ -38,7 +38,7 @@ make run
 ├── input.dat         # Arquivo de entrada com matriz
 ├── output.dat        # Relatório gerado
 ├── Makefile          # Compilação automatizada
-└── README.md         # Este arquivo
+└── README.md         # Documentação
 ```
 
 ---
@@ -94,10 +94,10 @@ Exemplo:
 O vento é configurável no arquivo `config.hpp`:
 
 ```cpp
-const bool VENTO_CIMA = true;
-const bool VENTO_BAIXO = true;
-const bool VENTO_ESQUERDA = false;
-const bool VENTO_DIREITA = true;
+#define VENTO_CIMA = true;
+#define VENTO_BAIXO = true;
+#define VENTO_ESQUERDA = false;
+#define VENTO_DIREITA = true;
 ```
 
 Com vento ativado, o fogo se propaga **somente nas direções permitidas**.
