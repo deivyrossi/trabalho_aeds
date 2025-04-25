@@ -2,8 +2,8 @@
 
 **Disciplina:** Estrutura de Dados  
 **Professor:** Michel Pires da Silva – CEFET-MG  
-**Aluno:** [Seu nome aqui]  
-**Entrega:** 20 de abril de 2025
+**Aluno:** Deivy Rossi Teixeira de Melo 
+**Entrega:** 26 de abril de 2025
 
 ---
 
@@ -25,7 +25,7 @@ Este projeto implementa um simulador de propagação de incêndio em uma florest
 ```bash
 make clean
 make
-./build/app
+make run
 ```
 
 ---
