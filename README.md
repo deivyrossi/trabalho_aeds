@@ -139,10 +139,32 @@ Ao ativar vento apenas para a direita, o fogo propaga de forma assimétrica:
 
 ## 🤖 Estratégias e Algoritmos
 
-- Busca por melhor posição: água > vazio > árvore
-- Verificação de rotas de fuga (`existeSaida`)
-- Propagação de incêndio controlada por vento
-- Mecanismo de segunda chance ao pisar no fogo
+📂 Classe Arquivo
+
+    Função principal: processarArquivo e getMatriz.
+
+    Responsabilidades:
+
+        Lê o tamanho da matriz, posição inicial do fogo, e os valores da matriz.
+
+        Trata erros tipo: arquivo inexistente, arquivo mal formatado, valores faltando.
+
+    Observação importante: o getMatriz sempre lê do input.dat, mesmo que o processarArquivo permita nomes variáveis. Meio inconsistente, mas funcional.
+
+🧠 Classe Algoritmos
+Funções principais:
+
+    encontrarMelhorPos: Decide para onde o animal vai se mover, preferindo água ou espaço livre.
+
+    imprimirMatriz: Exibe a matriz na tela com emojis pra ficar mais visual (top demais pro feedback).
+
+    existeSaida: Verifica se o animal pode se mover em volta (importante pra saber se ele tá preso).
+
+    SimularIteracoes: Core da simulação. Move o animal, propaga o fogo e salva o progresso.
+
+    salvarIteracaoNoArquivo: Grava cada iteração no arquivo output.dat.
+
+    executarPrograma: Inicia a simulação.
 
 ---
 
