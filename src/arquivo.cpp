@@ -1,11 +1,11 @@
-#include "arquivo.hpp"
+#include "include/arquivo.hpp"
 #include <iostream>
 #include <fstream>
 #include <vector>
 #include <stdexcept>
 using namespace std;
 
-#include "config.hpp"
+#include "include/config.hpp"
 
 Arquivo::Arquivo() {}
 

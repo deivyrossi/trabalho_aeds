@@ -1,6 +1,6 @@
-#include "algoritmos.hpp"
-#include "arquivo.hpp"
-#include "config.hpp"
+#include "include/arquivo.hpp"
+#include "include/algoritmos.hpp"
+#include "include/config.hpp"
 
 int main() {
     Arquivo arq;
