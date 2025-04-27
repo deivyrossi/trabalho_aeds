@@ -89,7 +89,7 @@ Exemplo:
 
 O comportamento do animal na simulação é determinado por uma combinação de fatores, incluindo a busca por uma saída, a interação com o ambiente (fogo e água) e a tentativa de evitar focos de incêndio. O animal se move de maneira inteligente, tomando decisões baseadas nas condições ao seu redor.
 
-**Principais Características do Comportamento Atualizado:**
+**Principais Características do Comportamento:**
 - **Busca Inteligente com BFS:** O animal realiza uma busca em largura para encontrar o local mais seguro possível, preferencialmente próximo a água ou em uma posição distante do fogo.
 - **Prioridade de Sobrevivência:** O movimento visa minimizar riscos — primeiro buscando água, depois áreas sem fogo ao redor.
 - **Avaliação de Ambiente:** Durante a busca, o animal ignora áreas em chamas ou queimadas e prioriza caminhos por terra ou diretamente pela água.
@@ -128,12 +128,14 @@ O estado da matriz é salvo a cada iteração, incluindo a posição do animal e
 Exemplo de saída:
 
 ```
-Iteração 0:
-1 2 1 1 4 
+Iteracao 1:
+Posicao do animal: (4, 2)
+Situacao: Animal vivo
+2 2 1 1 4 
 2 2 2 1 1 
 1 2 1 1 4 
-0 A 1 1 1 
-1 0 1 0 4
+0 0 1 1 1 
+1 4 1 0 4 
 ```
 
 ---
