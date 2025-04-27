@@ -88,6 +88,7 @@ Exemplo:
 ### 🐾 Comportamento do Animal
 
 O comportamento do animal na simulação é determinado por uma combinação de fatores, incluindo a busca por uma saída, a interação com o ambiente (fogo e água) e a tentativa de evitar focos de incêndio. O animal se move de maneira inteligente, tomando decisões baseadas nas condições ao seu redor.
+
 **Principais Características do Comportamento Atualizado:**
 - **Busca Inteligente com BFS:** O animal realiza uma busca em largura para encontrar o local mais seguro possível, preferencialmente próximo a água ou em uma posição distante do fogo.
 - **Prioridade de Sobrevivência:** O movimento visa minimizar riscos — primeiro buscando água, depois áreas sem fogo ao redor.
@@ -316,6 +317,7 @@ A classe `Algoritmos` contém as funções responsáveis pela simulação do mov
 
 A simulação ilustrou de maneira eficaz como variáveis ambientais, como vento e hidratação, influenciam a propagação do incêndio. A modularização do código e o uso de estruturas dinâmicas permitiram uma implementação flexível e escalável, facilitando ajustes futuros.
 A análise visual e os dados numéricos gerados ao longo das iterações forneceram uma compreensão detalhada do comportamento do sistema, ajudando a identificar pontos críticos.
+
 **Pontos de Melhoria:**
 - **Eficiência no Algoritmo:** O tempo de execução poderia ser otimizado, especialmente ao lidar com grandes matrizes e múltiplos focos de fogo.
 - **Visualização:** A criação de uma interface gráfica poderia melhorar a interpretação dos resultados, facilitando a análise do comportamento do incêndio.
