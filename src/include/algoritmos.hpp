@@ -19,7 +19,7 @@ struct Posicao {
 
 class Algoritmos {
 public:
-    Posicao encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y);
+    Posicao encontrarMelhorPosBFS(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y);
     Posicao encontrarCaminho(const vector<vector<int>>& matriz, int linhas, int colunas);
     void imprimirMatriz(const vector<vector<int>>& matriz);
     void salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int iteracao, Posicao posAnimal, bool animalVivo);

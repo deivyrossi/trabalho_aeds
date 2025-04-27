@@ -14,49 +14,75 @@ using namespace std;
 #include "include/config.hpp"
 #include "include/algoritmos.hpp"
 
-Posicao Algoritmos::encontrarMelhorPos(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y) {
+Posicao Algoritmos::encontrarMelhorPosBFS(vector<vector<int>>& matriz, int linhas, int colunas, int x, int y) {
+    queue<Posicao> fila;
+    vector<vector<Posicao>> veioDe(linhas, vector<Posicao>(colunas, {-1, -1}));
+    vector<vector<bool>> visitado(linhas, vector<bool>(colunas, false));
     vector<Posicao> direcoes = {{0, -1}, {0, 1}, {-1, 0}, {1, 0}};
-    Posicao melhorPos = {x, y};
-    int melhorValor = 3;
 
-    for (const auto& direcao : direcoes) {
-        int nx = x + direcao.x;
-        int ny = y + direcao.y;
+    fila.push({x, y});
+    visitado[x][y] = true;
 
-        if (nx >= 0 && nx < linhas && ny >= 0 && ny < colunas) {
-            int valor = matriz[nx][ny];
+    while (!fila.empty()) {
+        Posicao atual = fila.front();
+        fila.pop();
 
-            if (valor == 4) return {nx, ny};
-            if ((valor == 0 || valor == 1) && melhorValor == 3) {
-                melhorPos = {nx, ny};
-                melhorValor = valor;
+        for (const auto& direcao : direcoes) {
+            int nx = atual.x + direcao.x;
+            int ny = atual.y + direcao.y;
+
+            if (nx >= 0 && ny >= 0 && nx < linhas && ny < colunas && !visitado[nx][ny]) {
+                if (matriz[nx][ny] == 2 || matriz[nx][ny] == 5 || matriz[nx][ny] == 3)
+                    continue;
+
+                veioDe[nx][ny] = {atual.x, atual.y};
+                visitado[nx][ny] = true;
+
+                if (matriz[nx][ny] == 4) {
+                    Posicao p = {nx, ny};
+                    while (veioDe[p.x][p.y].x != x || veioDe[p.x][p.y].y != y) {
+                        p = veioDe[p.x][p.y];
+                        if (p.x == -1 || p.y == -1) {
+                            return {x, y};
+                        }
+                    }
+                    return p;
+                }
+
+                fila.push({nx, ny});
             }
         }
     }
 
-    return melhorPos;
+    for (int i = 0; i < linhas; i++) {
+        for (int j = 0; j < colunas; j++) {
+            if (visitado[i][j] && (matriz[i][j] == 0 || matriz[i][j] == 1)) {
+                Posicao p = {i, j};
+                while (veioDe[p.x][p.y].x != x || veioDe[p.x][p.y].y != y) {
+                    p = veioDe[p.x][p.y];
+                    if (p.x == -1 || p.y == -1) {
+                        return {x, y};
+                    }
+                }
+                return p;
+            }
+        }
+    }
+
+    return {x, y};
 }
+
+
 
 void Algoritmos::imprimirMatriz(const vector<vector<int>>& matriz) {
     for (size_t i = 0; i < matriz.size(); ++i) {
         for (size_t j = 0; j < matriz[0].size(); ++j) {
-            if (i == static_cast<size_t>(posAnimal.x) && j == static_cast<size_t>(posAnimal.y)) {
-                cout << "🐾 ";
-            } else {
-                switch (matriz[i][j]) {
-                    case 0: cout << "⬜ "; break;
-                    case 1: cout << "🌳 "; break;
-                    case 2:
-                    case 5: cout << "🔥 "; break;
-                    case 3: cout << "🌑 "; break;
-                    case 4: cout << "💧 "; break;
-                    default: cout << "❓ "; break;
-                }
-            }
+            cout << matriz[i][j] << " ";
         }
         cout << '\n';
     }
 }
+
 
 bool Algoritmos::existeSaida(const vector<vector<int>> matriz, Posicao pos) {
     int dx[] = {-1, 1, 0, 0};
@@ -106,7 +132,7 @@ void Algoritmos::SimularIteracoes(int linhas, int colunas, vector<vector<int>>& 
     while (animalVivo && !focosFogo.empty() && iteracaoLocal <= maxIteracoes) {
         cout << "Iteracao " << iteracaoLocal << endl;
 
-        Posicao proxima = encontrarMelhorPos(matriz, linhas, colunas, posAnimal.x, posAnimal.y);
+        Posicao proxima = encontrarMelhorPosBFS(matriz, linhas, colunas, posAnimal.x, posAnimal.y);
 
         if ((matriz[proxima.x][proxima.y] == 0 || matriz[proxima.x][proxima.y] == 1 || matriz[proxima.x][proxima.y] == 4) && (proxima.x != posAnimal.x || proxima.y != posAnimal.y)) {
             posAnimal = proxima;
@@ -199,7 +225,7 @@ void Algoritmos::salvarIteracaoNoArquivo(const vector<vector<int>>& matriz, int 
     }
 
     arquivoSaida << "Iteracao " << iteracao << ":\n";
-    arquivoSaida << "Posicao do animal: (" << posAnimal.x << ", " << posAnimal.y << ")\n";
+    arquivoSaida << "Posicao do animal: (" << (posAnimal.x+1)<< ", " << (posAnimal.y+1) << ")\n";
     arquivoSaida << "Situacao: " << (animalVivo ? "Animal vivo" : "Animal morto") << "\n";
 
     for (const auto& linha : matriz) {

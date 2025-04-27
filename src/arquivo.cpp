@@ -9,49 +9,7 @@ using namespace std;
 
 Arquivo::Arquivo() {}
 
-void Arquivo::processarArquivo(const string& nomeArquivo) {
-    if (nomeArquivo.empty()) {
-        cerr << "Nome do arquivo não pode ser vazio";
-        return;
-    }
 
-    try {
-        ifstream arqEntrada(nomeArquivo);
-        if (!arqEntrada) {
-            throw runtime_error("Arquivo não encontrado: " + nomeArquivo);
-        }
-
-        int linhas, colunas, fogoX, fogoY;
-        if (!(arqEntrada >> linhas >> colunas >> fogoX >> fogoY)) {
-            throw runtime_error("Erro ao ler dimensões da matriz e posição inicial do fogo");
-        }
-
-        matriz.resize(linhas, vector<int>(colunas));
-        for (int i = 0; i < linhas; ++i) {
-            for (int j = 0; j < colunas; ++j) {
-                if (!(arqEntrada >> matriz[i][j])) {
-                    throw runtime_error("Erro ao ler valor da matriz na posição (" + to_string(i) + ", " + to_string(j) + ")");
-                }
-            }
-        }
-
-        cout << "Matriz carregada com sucesso!" << endl;
-        cout << "Dimensões: " << linhas << "x" << colunas << endl;
-        cout << "Fogo inicial em: (" << fogoX << ", " << fogoY << ")" << endl;
-
-        cout << "Matriz lida:" << endl;
-        for (const auto& linha : matriz) {
-            for (int valor : linha) {
-                cout << valor << " ";
-            }
-            cout << endl;
-        }
-
-        arqEntrada.close();
-    } catch (const exception& e) {
-        cerr << "Erro ao processar arquivo " << nomeArquivo << ": " << e.what() << endl;
-    }
-}
 vector<vector<int>> Arquivo::getMatriz() {
     ifstream arquivo("input.dat");
 
@@ -66,6 +24,9 @@ vector<vector<int>> Arquivo::getMatriz() {
     int fogoX, fogoY;
     arquivo >> fogoX >> fogoY;
 
+    fogoX--;
+    fogoY--;
+
     vector<vector<int>> matriz(linhas, vector<int>(colunas));
 
     for (int i = 0; i < linhas; i++) {
@@ -75,6 +36,13 @@ vector<vector<int>> Arquivo::getMatriz() {
                 return {};
             }
         }
+    }
+
+    
+    if (fogoX >= 0 && fogoX < linhas && fogoY >= 0 && fogoY < colunas) {
+        matriz[fogoX][fogoY] = 2;
+    } else {
+        cerr << "Posição inicial do fogo inválida: (" << fogoX << ", " << fogoY << ")" << endl;
     }
 
     return matriz;

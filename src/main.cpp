@@ -3,8 +3,6 @@
 #include "include/config.hpp"
 
 int main() {
-    Arquivo arq;
-    arq.processarArquivo("input.dat");
     
     Algoritmos alg;
     alg.executarPrograma();
