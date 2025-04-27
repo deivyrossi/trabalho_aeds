@@ -88,18 +88,19 @@ Exemplo:
 ### 🐾 Comportamento do Animal
 
 O comportamento do animal na simulação é determinado por uma combinação de fatores, incluindo a busca por uma saída, a interação com o ambiente (fogo e água) e a tentativa de evitar focos de incêndio. O animal se move de maneira inteligente, tomando decisões baseadas nas condições ao seu redor.
+**Principais Características do Comportamento Atualizado:**
+- **Busca Inteligente com BFS:** O animal realiza uma busca em largura para encontrar o local mais seguro possível, preferencialmente próximo a água ou em uma posição distante do fogo.
+- **Prioridade de Sobrevivência:** O movimento visa minimizar riscos — primeiro buscando água, depois áreas sem fogo ao redor.
+- **Avaliação de Ambiente:** Durante a busca, o animal ignora áreas em chamas ou queimadas e prioriza caminhos por terra ou diretamente pela água.
+- **Movimentação Otimizada:** Graças à BFS, o animal pode encontrar rotas mais seguras mesmo em situações complexas, evitando caminhos que o levariam diretamente ao fogo.
+- **Fuga Dinâmica:** Em caso de estar completamente cercado sem saídas, o animal pode ficar parado até morrer.
 
-**Principais Características do Comportamento:**
-- **Movimento Adaptativo:** O animal escolhe a melhor direção para se mover, sempre buscando a posição mais segura (terra ou água). Se estiver em um local cercado pelo fogo, o comportamento pode se tornar mais errático ou até mesmo levar à morte.
-- **Busca por Água:** O animal prioriza a busca por água (representada pelo valor 4 na matriz). Ao encontrar uma fonte de água, o animal a consome para hidratação, o que aumenta suas chances de sobrevivência.
-- **Interação com o Fogo:** O animal evita áreas onde o fogo está presente. Caso entre em uma área em chamas, o animal morre. A propagação do fogo afeta diretamente as decisões do animal sobre qual caminho seguir.
-- **Fuga Inteligente:** Caso o animal perceba que não há mais rotas viáveis e está cercado pelo fogo, ele pode ficar parado por algumas iterações. Após algumas tentativas sem sucesso, a simulação considera que o animal morreu, uma vez que não encontrou uma saída ou não conseguiu escapar a tempo.
+**Desafios e Melhorias Futura:**
+- Implementação de heurísticas mais avançadas (como A*) para trajetórias ainda mais otimizadas.
+- Melhor adaptação do animal a incêndios que mudam muito rapidamente de direção por conta do vento.
 
-**Desafios e Melhorias no Comportamento:**
-- **Decisões Complexas:** O algoritmo de movimento poderia ser mais sofisticado, levando em conta outras variáveis como o risco de aproximação do fogo e a quantidade de passos até uma saída segura.
-- **Comportamento em Caso de Perda de Rumo:** Em cenários em que o animal fica perdido, a lógica pode ser refinada para permitir novas tentativas de fuga, mesmo após ficar parado por algumas iterações.
 
-A simulação do comportamento do animal reflete uma interação simples, mas realista, com o ambiente. Futuras melhorias podem tornar essa dinâmica ainda mais desafiadora e interessante.
+A simulação do comportamento do animal reflete uma interação simples, mas realista, com o ambiente.
 
 ---
 
@@ -186,21 +187,33 @@ A classe `Algoritmos` contém as funções responsáveis pela simulação do mov
 
 ---
 
-#### **Função `encontrarMelhorPos`**
+### Função `encontrarMelhorPosBFS`
 
-- **Objetivo:** Encontrar a melhor posição para o animal em uma matriz, considerando as direções possíveis.
+- **Objetivo:** Utilizar o algoritmo de **Busca em Largura (BFS)** para encontrar a melhor posição segura para o animal se mover, priorizando encontrar água (valor 4) ou área segura (valor 0).
+  
 - **Entradas:**
-  - `matriz`: A matriz representando o ambiente.
-  - `linhas` e `colunas`: Dimensões da matriz.
-  - `x` e `y`: Posição atual do animal.
-- **Saída:** A posição `(x, y)` mais próxima que seja viável (terra ou água).
-- **Explicação:**
-  - Define as direções possíveis: esquerda, direita, cima e baixo.
-  - Para cada direção, calcula a nova posição `(nx, ny)`.
-  - Verifica se a nova posição está dentro dos limites da matriz.
-  - Se a nova posição for água (valor 4), retorna imediatamente essa posição.
-  - Se a posição for válida (terra ou água) e a melhor posição ainda não foi escolhida, marca essa posição como a melhor até o momento.
-  - Retorna a melhor posição encontrada.
+  - `matriz`: Matriz representando o ambiente (floresta, água, fogo, etc.).
+  - `linhas`, `colunas`: Dimensões da matriz.
+  - `x`, `y`: Posição atual do animal.
+
+- **Saída:**
+  - Retorna a melhor nova posição `(x, y)` para o animal se mover.
+  - Se não houver melhor posição possível, permanece na posição atual.
+
+- **Funcionamento Detalhado:**
+  1. Cria uma fila para realizar a BFS, iniciando pela posição atual do animal.
+  2. Mantém uma matriz de visitados para evitar revisitar células.
+  3. Para cada célula:
+     - Verifica as posições vizinhas (cima, baixo, esquerda, direita).
+     - Se encontrar uma célula de água (`4`), imediatamente retorna essa posição.
+     - Se encontrar uma célula vazia (`0`), marca como possível melhor movimento, caso não haja água.
+  4. Se terminar a busca sem encontrar água, move para o local de terra mais seguro encontrado.
+  5. Se não houver movimento possível, o animal permanece na posição atual.
+
+- **Vantagens da BFS no Contexto:**
+  - Garante encontrar a posição mais próxima de água, minimizando o tempo de exposição ao fogo.
+  - Evita decisões precipitadas que poderiam levar à morte rápida.
+  - Permite uma navegação estratégica do ambiente dinâmico (mudanças causadas pela propagação do incêndio).
 
 ---
 
@@ -305,7 +318,6 @@ A simulação ilustrou de maneira eficaz como variáveis ambientais, como vento 
 A análise visual e os dados numéricos gerados ao longo das iterações forneceram uma compreensão detalhada do comportamento do sistema, ajudando a identificar pontos críticos.
 **Pontos de Melhoria:**
 - **Eficiência no Algoritmo:** O tempo de execução poderia ser otimizado, especialmente ao lidar com grandes matrizes e múltiplos focos de fogo.
-- **Movimentação do animal:** A introdução de um algoritmo de BFS para controlar a movimentação do animal, a tornando mais eficiente
 - **Visualização:** A criação de uma interface gráfica poderia melhorar a interpretação dos resultados, facilitando a análise do comportamento do incêndio.
 
 No geral, a simulação oferece uma boa base para entender a propagação de incêndios, com espaço para melhorias que podem enriquecer a experiência e a precisão dos resultados.
